@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+
+.app {
+	min-height: 100vh;
+}
+
+.app:has(#navbar-Auth) {
+	min-height: calc(100vh - 70px);
+}

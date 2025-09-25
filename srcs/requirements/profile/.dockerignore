@@ -1,0 +1,5 @@
+Dockerfile
+.dockerignore
+data/node_modules
+data/dist
+data/package-lock.json

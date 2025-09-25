@@ -1,0 +1,14 @@
+{
+  "extends": "fastify-tsconfig",
+  "compilerOptions": {
+    "outDir": "dist",
+	"lib": ["DOM", "ES2015", "ES2017", "ES2020"],
+    "sourceMap": true,
+	"target": "es2017",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*"]
+}

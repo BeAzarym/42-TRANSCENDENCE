@@ -1,0 +1,200 @@
+services:
+  nginx:
+    container_name: nginx
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+    build:
+      context: requirements/nginx
+      dockerfile: Dockerfile
+    ports:
+      - "4433:443"
+    restart: on-failure
+  
+  # fastify:
+  #   container_name: fastify
+  #   volumes:
+  #     - ./volumes/fastify:/var/www/fastify
+  #     - ./requirements/fastify/data:/app
+  #   networks:
+  #     - trenscendance
+  #   build: 
+  #     context: requirements/fastify
+  #     dockerfile: Dockerfile
+  #   restart: on-failure
+  
+  database:
+    container_name: database
+    volumes:
+      - ./volumes/database:/var/www/database
+    networks:
+      - trenscendance
+    build: 
+      context: requirements/database
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/database/data
+          target: /app
+          ignore:
+            - node_modules/
+
+  auth:
+    container_name: auth
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+    build:
+      context: requirements/auth
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/auth/data
+          target: /app
+          ignore:
+            - node_modules
+
+  front:
+    container_name: front
+    volumes:
+      - ./volumes/database/avatars:/var/www/database/avatars
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+      - auth
+    build:
+      context: requirements/front
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/front/data
+          target: /app
+          ignore:
+            - node_modules
+
+  pong:
+    container_name: pong
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+    build:
+      context: requirements/pong
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/pong/data
+          target: /app
+          ignore:
+            - node_modules
+
+  leaderboard:
+    container_name: leaderboard
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+    build:
+      context: requirements/leaderboard
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/leaderboard/data
+          target: /app
+          ignore:
+            - node_modules
+
+  profile:
+    container_name: profile
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+    build:
+      context: requirements/profile
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/profile/data
+          target: /app
+          ignore:
+            - node_modules
+
+  social:
+    container_name: social
+    networks:
+      - trenscendance
+    depends_on:
+      - database
+    build:
+      context: requirements/social
+      dockerfile: Dockerfile
+    restart: on-failure
+    env_file:
+      - ./.env
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./requirements/social/data
+          target: /app
+          ignore:
+            - node_modules
+
+  # temp database sdk building
+  # sdk:
+  #   container_name: sdk
+  #   networks:
+  #     - trenscendance
+  #   build:
+  #     context: requirements/sdk
+  #     dockerfile: Dockerfile
+  #   restart: on-failure
+  #   env_file:
+  #     - ./.env
+  #   develop:
+  #     watch:
+  #       - action: sync
+  #         path: ./requirements/sdk/data
+  #         target: /app
+  #         ignore:
+  #           - node_modules
+
+# volumes:
+#   fastify:
+#     name: fastify_data
+#     driver: local
+#     driver_opts:
+#       type: 'none'
+#       o: 'bind'
+#       device: './volumes/fastify'
+
+networks:
+  trenscendance:
+    driver: bridge
