@@ -1,4 +1,4 @@
-# FT_TRANSCENDENCE - Real-Time Pong Platform
+# FT_TRANSCENDENCE - Real-Time Pong Game
 
 A 42 School final project creating a modern, web-based multiplayer Pong game with real-time gameplay, tournaments, and social features.
 
